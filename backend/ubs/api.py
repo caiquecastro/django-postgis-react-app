@@ -12,7 +12,6 @@ class UbsSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = UBS
         fields = (
-            # 'vlr_latlon',
             'nom_estab',
             'cod_munic',
             'cod_cnes',
@@ -31,8 +30,11 @@ class UbsSerializer(serializers.HyperlinkedModelSerializer):
         )
 
     def get_distancia(self, obj):
-        return '{:.3}'.format(obj.distance.km)
-    
+        try:
+            return '{:.3}'.format(obj.distance.km)
+        except AttributeError:
+            return
+
     def get_latitude(self, obj):
         return obj.vlr_latlon.y
     
@@ -44,9 +46,12 @@ class UbsViewSet(viewsets.ModelViewSet):
     serializer_class = UbsSerializer
 
     def get_queryset(self):
-        lat = self.request.query_params['lat']
-        lon = self.request.query_params['lon']
+        lat = self.request.query_params.get('lat', None)
+        lon = self.request.query_params.get('lon', None)
 
-        point = Point(float(lon), float(lat), srid=4326)
+        if (lat is not None and lon is not None):
+            point = Point(float(lon), float(lat), srid=4326)
 
-        return UBS.objects.annotate(distance=Distance('vlr_latlon', point)).order_by('distance')[:10]
+            return UBS.objects.annotate(distance=Distance('vlr_latlon', point)).order_by('distance')
+
+        return UBS.objects.all()
