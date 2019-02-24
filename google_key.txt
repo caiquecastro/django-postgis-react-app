@@ -1,6 +1,0 @@
-AIzaSyDLe7faycXCbSAPOykyIeqjhfDjGxwZInE
-
-
-<th>Rota</th>
-
-<td><a href={`https://www.google.com/maps/dir/${this.state.searchCoords.lat},${this.state.searchCoords.long}/${item.latitude},${item.longitude}/`}>Rota</a></td>
