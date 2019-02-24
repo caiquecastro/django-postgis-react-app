@@ -1,12 +1,6 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Main from './pages/Main';
-import GlobalStyles from './styles/global';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-ReactDOM.render(
-<Fragment>
-  <GlobalStyles />
-  <Main />
-</Fragment>,
-document.getElementById('root'));
-
+ReactDOM.render(<Main />, document.getElementById('root'));
