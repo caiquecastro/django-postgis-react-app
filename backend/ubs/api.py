@@ -3,6 +3,7 @@ from rest_framework import routers, serializers, viewsets
 from ubs.models import UBS
 from django.contrib.gis.geos import Point
 from django.contrib.gis.db.models.functions import Distance
+from rest_framework import filters
 
 class UbsSerializer(serializers.HyperlinkedModelSerializer):
     latitude = serializers.SerializerMethodField()
@@ -44,6 +45,8 @@ class UbsSerializer(serializers.HyperlinkedModelSerializer):
 class UbsViewSet(viewsets.ModelViewSet):
     queryset = UBS.objects.all()
     serializer_class = UbsSerializer
+    filter_backends = (filters.OrderingFilter,filters.SearchFilter,)
+    search_fields = ('dsc_cidade','co_cep')
 
     def get_queryset(self):
         lat = self.request.query_params.get('lat', None)
@@ -54,4 +57,4 @@ class UbsViewSet(viewsets.ModelViewSet):
 
             return UBS.objects.annotate(distance=Distance('vlr_latlon', point)).order_by('distance')
 
-        return UBS.objects.all()
+        return UBS.objects.all().order_by('nom_estab')
