@@ -1,4 +1,4 @@
-import axios from 'axios';
+import UbsApi from '../api/UbsApi';
 import React, { Component, Fragment } from 'react';
 import { Button, Alert, FormGroup, Input, Table, Form } from 'reactstrap';
 
@@ -17,6 +17,7 @@ class SearchUbsByCity extends Component {
         this.setState({
             results: [],
             totalCount: 0,
+            currentPage: 1,
             searchTerm: event.target.value,
         });
     };
@@ -29,20 +30,25 @@ class SearchUbsByCity extends Component {
         });
     }
 
-    searchResults = () => {
-        const url = `http://localhost:8000/ubs?format=json&page=${this.state.currentPage}&q=${this.searchTerm}`;
+    searchResults = (e) => {
+        e && e.preventDefault();
 
-        axios.get(url)
-            .then(({ data }) => {
-                this.setState({
-                    results: data.results,
-                    totalCount: data.count,
-                    hasNext: data.next,
-                    hasPrevious: data.previous,
-                });
-            }).catch(() => {
-                this.setState({ errorMessage: 'Não foi possível obter a lista de resultados' })
+        UbsApi.get('/', {
+            params: {
+                page: this.state.currentPage,
+                search: this.state.searchTerm || undefined,
+            },
+        }).then(({ data }) => {
+            this.setState({
+                results: data.results,
+                totalCount: data.count,
+                hasNext: data.next,
+                errorMessage: null,
+                hasPrevious: data.previous,
             });
+        }).catch(() => {
+            this.setState({ errorMessage: 'Não foi possível obter a lista de resultados' })
+        });
     }
 
     renderTable() {
@@ -54,7 +60,7 @@ class SearchUbsByCity extends Component {
 
         return (
             <div>
-                <p>Página {this.state.currentPage }. Exibindo {this.state.totalCount} items</p>
+                <p>Página {this.state.currentPage }. Encontrados {this.state.totalCount} items</p>
                 <Table striped>
                     <thead>
                         <tr>
@@ -85,11 +91,11 @@ class SearchUbsByCity extends Component {
         return (
             <Fragment>
                 <p>Certifique-se de separar maiúscula e minúscula</p>
-                <Form className="mb-2" inline>
+                <Form className="mb-2" inline onSubmit={this.searchResults}>
                     <FormGroup className="mr-2">
                         <Input type="text" value={this.state.searchTerm} onChange={this.changeTerm} />
                     </FormGroup>
-                    <Button color="secondary" onClick={this.searchResults}>Buscar</Button>
+                    <Button color="secondary">Buscar</Button>
                 </Form>
                 {this.state.errorMessage && <Alert color="danger">{this.state.errorMessage}</Alert>}
                 {this.renderTable()}

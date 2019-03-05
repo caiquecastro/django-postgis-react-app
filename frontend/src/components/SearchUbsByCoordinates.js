@@ -1,4 +1,4 @@
-import axios from 'axios';
+import UbsApi from '../api/UbsApi';
 import React, { Component, Fragment } from 'react';
 import { Button, Label, FormGroup, Input, Table, Form } from 'reactstrap';
 
@@ -56,19 +56,22 @@ class SearchUbsByCoordinates extends Component {
     }
 
     searchResults = () => {
-        const url = `http://localhost:8000/ubs?format=json&page=${this.state.currentPage}&lat=${this.state.currentPosition.latitude}&lon=${this.state.currentPosition.longitude}`;
-
-        axios.get(url)
-            .then(({ data }) => {
-                this.setState({
-                    results: data.results,
-                    totalCount: data.count,
-                    hasNext: data.next,
-                    hasPrevious: data.previous,
-                });
-            }).catch(error => {
-                // this.setState({ searchCity: { ...this.state.searchCity, ubss: [], maxPage: 1 } })
-            })
+        UbsApi.get('/', {
+            params: {
+                page: this.state.currentPage,
+                lat: this.state.latitude,
+                lon: this.state.longitude,
+            },
+        }).then(({ data }) => {
+            this.setState({
+                results: data.results,
+                totalCount: data.count,
+                hasNext: data.next,
+                hasPrevious: data.previous,
+            });
+        }).catch(error => {
+            // this.setState({ searchCity: { ...this.state.searchCity, ubss: [], maxPage: 1 } })
+        })
     }
 
     render() {
