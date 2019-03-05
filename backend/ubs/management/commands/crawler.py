@@ -15,8 +15,6 @@ class Command(BaseCommand):
             ubs = response['records']
             for u in ubs:
                 model_ubs = UBS()
-                # model_ubs.vlr_latitude = u['vlr_latitude']
-                # model_ubs.vlr_longitude = u['vlr_longitude']
                 model_ubs.vlr_latlon = Point(float(u['vlr_longitude']), float(u['vlr_latitude']))
                 model_ubs.cod_munic = u['cod_munic']
                 model_ubs.cod_cnes = u['cod_cnes']
