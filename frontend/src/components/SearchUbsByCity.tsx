@@ -1,5 +1,5 @@
 import UbsApi from '../api/UbsApi';
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { Button, Alert, FormGroup, Input, Table, Form } from 'reactstrap';
 
 class SearchUbsByCity extends Component {

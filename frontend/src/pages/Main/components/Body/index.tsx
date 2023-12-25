@@ -7,7 +7,7 @@ import {
   Container,
   TabContent,
 } from 'reactstrap';
-import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
+// import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import SearchUbsByCity from '../../../../components/SearchUbsByCity';
 import SearchUbsByCoordinates from '../../../../components/SearchUbsByCoordinates';
 import classnames from 'classnames';
@@ -77,6 +77,7 @@ class Body extends Component {
   }
 }
 
-export default GoogleApiWrapper({
-  apiKey: ("AIzaSyDLe7faycXCbSAPOykyIeqjhfDjGxwZInE")
-})(Body)
+export default Body;
+// export default GoogleApiWrapper({
+//   apiKey: ("AIzaSyDLe7faycXCbSAPOykyIeqjhfDjGxwZInE")
+// })(Body)
